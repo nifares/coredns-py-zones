@@ -1,0 +1,15 @@
+$TTL    {{ zone.ttl }}
+@       IN      SOA     {{ zone.ns }}. admin.{{ zone.domain}}. (
+                {{ zone.serial }}    ; Serial
+                604800               ; Refresh
+                86400                ; Retry
+                2419200              ; Expire
+                604800 )             ; Negative Cache TTL
+
+@       3600    IN    NS        {{ zone.ns }}.
+
+; PTR Records
+
+{% for record in zone.records.A -%}
+    {{ "{:<10}".format(record.target.split('.')[3]) }}IN    PTR    {{ record.name }}.{{ zone.domain }}.
+{% endfor %}

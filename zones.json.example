@@ -1,0 +1,30 @@
+{ "local.lan":
+    {
+        "network": "10.0.0.0",
+        "ttl": "300",
+        "ns": "ns.local.lan",
+        "records": {
+            "A": [
+                { "name": "host1",  "target": "10.0.0.1" },
+                { "name": "host2",  "target": "10.0.0.2" },
+                { "name": "host3",  "target": "10.0.0.3" }
+            ],
+            "CNAME": [
+                { "name": "example-service1",   "target": "host1"  },
+                { "name": "example-service2",   "target": "host2"  },
+                { "name": "example-service3",   "target": "host3"  }
+            ]
+        }
+    },
+    "another.lan":
+    {
+        "network": "10.0.2.0",
+        "ttl": "600",
+        "ns": "ns.another.lan",
+        "records": {
+            "A": [
+                { "name": "another-host1",  "target": "10.0.2.10" } 
+            ]
+        }
+    }
+}

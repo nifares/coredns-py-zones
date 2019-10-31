@@ -1,0 +1,21 @@
+$TTL    {{ zone.ttl }}
+@       IN      SOA     {{ zone.ns }}. admin.{{ zone.domain}}. (
+                {{ zone.serial }}    ; Serial
+                604800               ; Refresh
+                86400                ; Retry
+                2419200              ; Expire
+                604800 )             ; Negative Cache TTL
+
+@       3600    IN    NS        {{ zone.ns }}.
+
+; A Records
+
+{% for record in zone.records.A -%}
+    {{ "{:<20}".format(record.name) }}      IN      A       {{ record.target }}
+{% endfor %}
+
+; CNAME Records
+
+{% for record in zone.records.CNAME -%}
+    {{ "{:<20}".format(record.name) }}      IN      CNAME   {{ record.target }}
+{% endfor %}

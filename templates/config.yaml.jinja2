@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+data:
+  Corefile: |
+    {% for name, zone in zones.items() -%}
+    {{zone.domain}}:53 {
+        errors
+        prometheus :9153
+        cache 30
+        loop
+        reload
+        loadbalance
+        file /etc/coredns/{{zone.file}} {
+          reload 5s
+        }
+    }
+    {{zone.reverse.domain}}:53 {
+        errors
+        prometheus :9153
+        cache 30
+        loop
+        reload
+        loadbalance
+        file /etc/coredns/{{zone.reverse.file}} {{zone.reverse.domain}} {
+          reload 5s
+        }
+    }
+    {% endfor -%}
+    .:53 {
+        errors
+        health
+        prometheus :9153
+        cache 30
+        loop
+        reload
+        loadbalance
+        forward . 10.96.227.252 1.1.1.1 8.8.8.8
+    }
+  {% for name, zone in zones.items() -%}
+  {{zone.file}}: |
+    {{zone.raw|indent(4)}}
+  {{zone.reverse.file}}: |
+    {{zone.reverse.raw|indent(4)}}
+  {% endfor -%}
